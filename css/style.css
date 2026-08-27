@@ -41,6 +41,25 @@
   --transition:   0.22s ease;
 }
 
+/* ── Accessibility: visually hidden but readable by screen readers ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Semantic element resets (figure, output, nav used as layout) ── */
+figure   { margin: 0; }
+output   { display: block; }
+fieldset { border: none; padding: 0; margin: 0; }
+legend   { padding: 0; }
+
 /* ── Body & Background ── */
 body {
   font-family: 'Quicksand', sans-serif;

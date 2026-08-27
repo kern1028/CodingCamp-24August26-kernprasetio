@@ -5,65 +5,123 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>☕ My Life Dashboard</title>
   <link rel="stylesheet" href="css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap"
+    rel="stylesheet"
+  />
 </head>
+
 <body>
 
-  <!-- Floating decorative blobs -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
+  <!--
+  ═══════════════════════════════════════════
+    DECORATIVE BACKGROUND BLOBS (presentational)
+  ═══════════════════════════════════════════
+  -->
+  <span class="blob blob-1" aria-hidden="true"></span>
+  <span class="blob blob-2" aria-hidden="true"></span>
+  <span class="blob blob-3" aria-hidden="true"></span>
 
+
+  <!--
+  ═══════════════════════════════════════════
+    ROOT LAYOUT
+  ═══════════════════════════════════════════
+  -->
   <div class="dashboard">
 
-    <!-- ═══════════════ GREETING CARD ═══════════════ -->
-    <div class="card card-greeting">
-      <div class="greeting-left">
-        <div class="greeting-icon">☕</div>
-        <div class="greeting-text">
+
+    <!-- ════════════════════════════════════
+         GREETING BANNER  →  <header>
+         Semantic reason: top-level page banner
+         containing identity, clock, and name.
+    ════════════════════════════════════ -->
+    <header class="card card-greeting">
+
+      <!-- Left: icon + greeting text -->
+      <section class="greeting-left" aria-label="Greeting">
+        <span class="greeting-icon" aria-hidden="true">☕</span>
+        <hgroup class="greeting-text">
           <h1 class="greeting-message" id="greetingMsg">Good Morning</h1>
-          <p class="greeting-name" id="greetingName">Welcome back, <span id="userName">Friend</span>!</p>
-        </div>
-      </div>
-      <div class="greeting-right">
-        <div class="clock" id="clock">00:00:00</div>
-        <div class="date" id="dateDisplay">Loading date...</div>
-        <button class="btn-name-edit" id="btnEditName">✏️ Set Your Name</button>
-      </div>
-    </div>
+          <p  class="greeting-name"    id="greetingName">
+            Welcome back, <strong id="userName">Friend</strong>!
+          </p>
+        </hgroup>
+      </section>
 
-    <!-- Name Modal -->
-    <div class="modal-overlay" id="nameModal">
-      <div class="modal">
-        <h3>🌸 What's your name?</h3>
-        <input type="text" id="nameInput" class="modal-input" placeholder="Enter your name..." maxlength="30" />
-        <div class="modal-actions">
+      <!-- Right: live clock + date + name-edit button -->
+      <aside class="greeting-right" aria-label="Clock">
+        <time class="clock" id="clock" aria-live="polite">00:00:00</time>
+        <p    class="date"  id="dateDisplay" aria-live="polite">Loading date...</p>
+        <button class="btn-name-edit" id="btnEditName" aria-haspopup="dialog">
+          ✏️ Set Your Name
+        </button>
+      </aside>
+
+    </header>
+
+
+    <!-- ════════════════════════════════════
+         NAME MODAL  →  <dialog> (via role)
+         Semantic reason: modal dialog for
+         user-name input.
+    ════════════════════════════════════ -->
+    <div class="modal-overlay" id="nameModal" role="dialog" aria-modal="true" aria-labelledby="nameModalTitle">
+      <article class="modal">
+        <h2 id="nameModalTitle">🌸 What's your name?</h2>
+        <label class="sr-only" for="nameInput">Your name</label>
+        <input
+          type="text"
+          id="nameInput"
+          class="modal-input"
+          placeholder="Enter your name..."
+          maxlength="30"
+          autocomplete="given-name"
+        />
+        <footer class="modal-actions">
           <button class="btn btn-primary" id="btnSaveName">Save</button>
-          <button class="btn btn-ghost" id="btnCancelName">Cancel</button>
-        </div>
-      </div>
+          <button class="btn btn-ghost"   id="btnCancelName">Cancel</button>
+        </footer>
+      </article>
     </div>
 
-    <div class="dashboard-grid">
 
-      <!-- ═══════════════ FOCUS TIMER ═══════════════ -->
-      <div class="card card-timer">
-        <div class="card-header">
-          <span class="card-icon">🍅</span>
-          <h2>Focus Timer</h2>
-        </div>
+    <!-- ════════════════════════════════════
+         MAIN DASHBOARD GRID  →  <main>
+         Semantic reason: primary content
+         area of the page.
+    ════════════════════════════════════ -->
+    <main class="dashboard-grid">
 
-        <div class="timer-display" id="timerDisplay">25:00</div>
-        <div class="timer-label" id="timerLabel">Ready to focus?</div>
 
-        <div class="timer-progress-wrap">
-          <div class="timer-progress-bar" id="timerProgressBar"></div>
-        </div>
+      <!-- ──────────────────────────────────
+           FOCUS TIMER  →  <section>
+           Semantic reason: self-contained
+           feature section with its own heading.
+      ────────────────────────────────────── -->
+      <section class="card card-timer" aria-labelledby="timerHeading">
 
-        <div class="timer-duration-wrap">
-          <label class="duration-label">Duration (min)</label>
+        <header class="card-header">
+          <span class="card-icon" aria-hidden="true">🍅</span>
+          <h2 id="timerHeading">Focus Timer</h2>
+        </header>
+
+        <!-- Live timer display -->
+        <output class="timer-display" id="timerDisplay" aria-live="polite" aria-atomic="true">
+          25:00
+        </output>
+        <p class="timer-label" id="timerLabel" aria-live="polite">Ready to focus?</p>
+
+        <!-- Progress bar -->
+        <figure class="timer-progress-wrap" aria-hidden="true">
+          <span class="timer-progress-bar" id="timerProgressBar"></span>
+        </figure>
+
+        <!-- Duration picker -->
+        <fieldset class="timer-duration-wrap">
+          <legend class="duration-label">Duration (min)</legend>
           <div class="duration-controls">
-            <button class="btn-round" id="btnDurDown">−</button>
+            <button class="btn-round" id="btnDurDown" aria-label="Decrease duration">−</button>
             <input
               type="number"
               id="durationValue"
@@ -73,31 +131,42 @@
               max="90"
               aria-label="Duration in minutes"
             />
-            <button class="btn-round" id="btnDurUp">+</button>
+            <button class="btn-round" id="btnDurUp" aria-label="Increase duration">+</button>
           </div>
           <p class="duration-hint">ketik angka atau klik −/+</p>
-        </div>
+        </fieldset>
 
-        <div class="timer-buttons">
-          <button class="btn btn-primary" id="btnStart">▶ Start</button>
+        <!-- Timer controls -->
+        <nav class="timer-buttons" aria-label="Timer controls">
+          <button class="btn btn-primary"   id="btnStart">▶ Start</button>
           <button class="btn btn-secondary" id="btnStop">⏸ Pause</button>
-          <button class="btn btn-ghost" id="btnReset">↺ Reset</button>
-        </div>
+          <button class="btn btn-ghost"     id="btnReset">↺ Reset</button>
+        </nav>
 
-        <div class="pomodoro-count">
-          <span>🍅 Sessions today: </span>
-          <span class="count-badge" id="pomodoroCount">0</span>
-        </div>
-      </div>
+        <!-- Session counter -->
+        <footer class="pomodoro-count">
+          <span>🍅 Sessions today:</span>
+          <strong class="count-badge" id="pomodoroCount">0</strong>
+        </footer>
 
-      <!-- ═══════════════ TO-DO LIST ═══════════════ -->
-      <div class="card card-todo">
+      </section>
+      <!-- end: Focus Timer -->
 
-        <!-- Header row -->
-        <div class="card-header todo-header">
-          <span class="card-icon">📋</span>
-          <h2>My Tasks</h2>
+
+      <!-- ──────────────────────────────────
+           MY TASKS  →  <section>
+           Semantic reason: self-contained
+           feature section with heading,
+           form, filters, and list.
+      ────────────────────────────────────── -->
+      <section class="card card-todo" aria-labelledby="tasksHeading">
+
+        <!-- Section header: title + sort + add-toggle -->
+        <header class="card-header todo-header">
+          <span class="card-icon" aria-hidden="true">📋</span>
+          <h2 id="tasksHeading">My Tasks</h2>
           <div class="todo-header-controls">
+            <label class="sr-only" for="sortSelect">Sort tasks</label>
             <select id="sortSelect" class="sort-select">
               <option value="default">Sort: Created</option>
               <option value="dueDate">Sort: Due Date</option>
@@ -105,34 +174,51 @@
               <option value="alpha">Sort: A–Z</option>
               <option value="done">Sort: Done Last</option>
             </select>
-            <button class="btn-add-toggle btn btn-primary" id="btnToggleForm" title="Add task">+ New Task</button>
+            <button
+              class="btn-add-toggle btn btn-primary"
+              id="btnToggleForm"
+              aria-expanded="false"
+              aria-controls="todoFormWrap"
+            >+ New Task</button>
           </div>
-        </div>
+        </header>
 
-        <!-- Collapsible add form -->
-        <div class="todo-form-wrap" id="todoFormWrap">
-          <div class="todo-form">
+        <!-- Collapsible add-task form -->
+        <div class="todo-form-wrap" id="todoFormWrap" aria-hidden="true">
+          <form class="todo-form" id="todoForm" novalidate aria-label="Add new task">
 
-            <!-- Row 1: Task name -->
+            <!-- Task name -->
             <div class="form-row">
               <label class="form-label" for="todoInput">Task Name</label>
-              <input type="text" id="todoInput" class="todo-input form-control" placeholder="What needs to be done? 🌿" maxlength="100" />
+              <input
+                type="text"
+                id="todoInput"
+                class="todo-input form-control"
+                placeholder="What needs to be done? 🌿"
+                maxlength="100"
+                required
+              />
             </div>
 
-            <!-- Row 2: Due date + presets -->
+            <!-- Due date + quick presets -->
             <div class="form-row">
-              <label class="form-label" for="todoDueDate">Due Date & Time</label>
+              <label class="form-label" for="todoDueDate">Due Date &amp; Time</label>
               <div class="due-row">
-                <input type="datetime-local" id="todoDueDate" class="form-control due-input" />
-                <div class="preset-btns">
-                  <button class="btn-preset" data-preset="today">Today</button>
-                  <button class="btn-preset" data-preset="tomorrow">Tomorrow</button>
-                  <button class="btn-preset" data-preset="nextweek">Next Week</button>
-                </div>
+                <input
+                  type="datetime-local"
+                  id="todoDueDate"
+                  class="form-control due-input"
+                  aria-label="Task deadline"
+                />
+                <nav class="preset-btns" aria-label="Quick date presets">
+                  <button type="button" class="btn-preset" data-preset="today">Today</button>
+                  <button type="button" class="btn-preset" data-preset="tomorrow">Tomorrow</button>
+                  <button type="button" class="btn-preset" data-preset="nextweek">Next Week</button>
+                </nav>
               </div>
             </div>
 
-            <!-- Row 3: Priority -->
+            <!-- Priority -->
             <div class="form-row">
               <label class="form-label" for="todoPriority">Priority</label>
               <select id="todoPriority" class="form-control form-select">
@@ -142,100 +228,167 @@
               </select>
             </div>
 
-            <!-- Actions -->
-            <div class="form-actions">
-              <button class="btn btn-primary" id="btnAddTodo">Add Task</button>
-              <button class="btn btn-ghost" id="btnCancelForm">Cancel</button>
-            </div>
-          </div>
-        </div>
+            <!-- Form actions -->
+            <footer class="form-actions">
+              <button type="button" class="btn btn-primary" id="btnAddTodo">Add Task</button>
+              <button type="button" class="btn btn-ghost"   id="btnCancelForm">Cancel</button>
+            </footer>
 
-        <!-- Filter tabs + stats -->
+          </form>
+        </div>
+        <!-- end: add-task form -->
+
+        <!-- Filter tabs + task stats -->
         <div class="todo-toolbar">
-          <div class="filter-tabs" id="filterTabs" role="tablist">
-            <button class="filter-tab active" data-filter="all"       role="tab">All</button>
-            <button class="filter-tab"        data-filter="today"     role="tab">Today</button>
-            <button class="filter-tab"        data-filter="upcoming"  role="tab">Upcoming</button>
-            <button class="filter-tab"        data-filter="completed" role="tab">Completed</button>
-          </div>
-          <span class="todo-stats" id="todoStats">0 tasks · 0 done</span>
+          <nav class="filter-tabs" id="filterTabs" role="tablist" aria-label="Filter tasks">
+            <button class="filter-tab active" data-filter="all"       role="tab" aria-selected="true">All</button>
+            <button class="filter-tab"        data-filter="today"     role="tab" aria-selected="false">Today</button>
+            <button class="filter-tab"        data-filter="upcoming"  role="tab" aria-selected="false">Upcoming</button>
+            <button class="filter-tab"        data-filter="completed" role="tab" aria-selected="false">Completed</button>
+          </nav>
+          <p class="todo-stats" id="todoStats" aria-live="polite">0 tasks · 0 done</p>
         </div>
 
         <!-- Task list -->
-        <ul class="todo-list" id="todoList"></ul>
-        <div class="todo-empty" id="todoEmpty">
-          <span>🌸 No tasks here yet!</span>
+        <ul class="todo-list" id="todoList" aria-label="Task list" aria-live="polite"></ul>
+
+        <!-- Empty state -->
+        <p class="todo-empty" id="todoEmpty" aria-live="polite">
+          🌸 No tasks here yet!
+        </p>
+
+      </section>
+      <!-- end: My Tasks -->
+
+
+      <!-- ──────────────────────────────────
+           QUICK LINKS  →  <section>
+           Semantic reason: self-contained
+           bookmark feature with heading,
+           form, and link list.
+      ────────────────────────────────────── -->
+      <section class="card card-links" aria-labelledby="linksHeading">
+
+        <header class="card-header">
+          <span class="card-icon" aria-hidden="true">🔖</span>
+          <h2 id="linksHeading">Quick Links</h2>
+        </header>
+
+        <!-- Add-link form -->
+        <form class="links-add-wrap" id="linksForm" novalidate aria-label="Add quick link">
+          <label class="sr-only" for="linkName">Link name</label>
+          <input
+            type="text"
+            id="linkName"
+            class="link-input"
+            placeholder="Link name"
+            maxlength="20"
+          />
+          <label class="sr-only" for="linkUrl">URL</label>
+          <input
+            type="url"
+            id="linkUrl"
+            class="link-input"
+            placeholder="https://..."
+          />
+          <button type="button" class="btn btn-primary" id="btnAddLink">+ Add</button>
+        </form>
+
+        <!-- Rendered link chips (by JS) -->
+        <nav class="links-grid" id="linksGrid" aria-label="Saved links"></nav>
+
+        <!-- Empty state -->
+        <p class="links-empty" id="linksEmpty">
+          🔗 No links yet — add your favorites!
+        </p>
+
+      </section>
+      <!-- end: Quick Links -->
+
+
+    </main>
+    <!-- end: dashboard-grid / <main> -->
+
+
+  </div>
+  <!-- end: .dashboard -->
+
+
+  <!-- ════════════════════════════════════
+       EDIT TASK MODAL  →  role="dialog"
+       Semantic reason: modal dialog for
+       editing an existing task.
+  ════════════════════════════════════ -->
+  <div class="modal-overlay" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <article class="modal modal-wide">
+
+      <h2 id="editModalTitle">✏️ Edit Task</h2>
+
+      <form class="edit-form" id="editForm" novalidate aria-label="Edit task form">
+
+        <!-- Task name -->
+        <div class="form-row">
+          <label class="form-label" for="editInput">Task Name</label>
+          <input
+            type="text"
+            id="editInput"
+            class="modal-input form-control"
+            placeholder="Task name..."
+            maxlength="100"
+            required
+          />
         </div>
 
-      </div>
-
-      <!-- ═══════════════ QUICK LINKS ═══════════════ -->
-      <div class="card card-links">
-        <div class="card-header">
-          <span class="card-icon">🔖</span>
-          <h2>Quick Links</h2>
-        </div>
-
-        <div class="links-add-wrap">
-          <input type="text" id="linkName" class="link-input" placeholder="Link name" maxlength="20" />
-          <input type="url" id="linkUrl" class="link-input" placeholder="https://..." />
-          <button class="btn btn-primary" id="btnAddLink">+ Add</button>
-        </div>
-
-        <div class="links-grid" id="linksGrid">
-          <!-- links rendered by JS -->
-        </div>
-
-        <div class="links-empty" id="linksEmpty">
-          <span>🔗 No links yet — add your favorites!</span>
-        </div>
-      </div>
-
-    </div><!-- end .dashboard-grid -->
-  </div><!-- end .dashboard -->
-
-  <!-- Edit Task Modal -->
-  <div class="modal-overlay" id="editModal">
-    <div class="modal modal-wide">
-      <h3>✏️ Edit Task</h3>
-
-      <div class="form-row">
-        <label class="form-label" for="editInput">Task Name</label>
-        <input type="text" id="editInput" class="modal-input form-control" placeholder="Task name..." maxlength="100" />
-      </div>
-
-      <div class="form-row">
-        <label class="form-label" for="editDueDate">Due Date & Time</label>
-        <div class="due-row">
-          <input type="datetime-local" id="editDueDate" class="form-control due-input" />
-          <div class="preset-btns">
-            <button class="btn-preset" data-edit-preset="today">Today</button>
-            <button class="btn-preset" data-edit-preset="tomorrow">Tomorrow</button>
-            <button class="btn-preset" data-edit-preset="nextweek">Next Week</button>
+        <!-- Due date + quick presets -->
+        <div class="form-row">
+          <label class="form-label" for="editDueDate">Due Date &amp; Time</label>
+          <div class="due-row">
+            <input
+              type="datetime-local"
+              id="editDueDate"
+              class="form-control due-input"
+              aria-label="Task deadline"
+            />
+            <nav class="preset-btns" aria-label="Quick date presets">
+              <button type="button" class="btn-preset" data-edit-preset="today">Today</button>
+              <button type="button" class="btn-preset" data-edit-preset="tomorrow">Tomorrow</button>
+              <button type="button" class="btn-preset" data-edit-preset="nextweek">Next Week</button>
+            </nav>
           </div>
         </div>
-      </div>
 
-      <div class="form-row form-row-inline">
-        <div class="form-group">
-          <label class="form-label" for="editPriority">Priority</label>
-          <select id="editPriority" class="form-control form-select">
-            <option value="high">🔴 High</option>
-            <option value="medium">🟡 Medium</option>
-            <option value="low">🟢 Low</option>
-          </select>
+        <!-- Priority -->
+        <div class="form-row form-row-inline">
+          <div class="form-group">
+            <label class="form-label" for="editPriority">Priority</label>
+            <select id="editPriority" class="form-control form-select">
+              <option value="high">🔴 High</option>
+              <option value="medium">🟡 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="btnSaveEdit">Save Changes</button>
-        <button class="btn btn-ghost" id="btnCancelEdit">Cancel</button>
-      </div>
-    </div>
+        <!-- Form actions -->
+        <footer class="modal-actions">
+          <button type="button" class="btn btn-primary" id="btnSaveEdit">Save Changes</button>
+          <button type="button" class="btn btn-ghost"   id="btnCancelEdit">Cancel</button>
+        </footer>
+
+      </form>
+
+    </article>
   </div>
+  <!-- end: Edit Task Modal -->
 
-  <!-- Toast notification -->
-  <div class="toast" id="toast"></div>
+
+  <!-- ════════════════════════════════════
+       TOAST NOTIFICATION  →  role="status"
+       Semantic reason: live region for
+       non-blocking status announcements.
+  ════════════════════════════════════ -->
+  <output class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></output>
+
 
   <script src="js/app.js"></script>
 </body>
