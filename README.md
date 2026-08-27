@@ -141,20 +141,3 @@ revou-coding-camp/
 2. Klik **+ Add**
 3. Tautan akan muncul sebagai tombol chip — klik untuk membuka di tab baru
 4. Klik **✕** pada chip untuk menghapus tautan
-
----
-
-## 🌐 Demo
-
-Akses langsung di GitHub Pages:
-**[https://kern1028.github.io/CodingCamp-24August26-kernprasetio](https://kern1028.github.io/CodingCamp-24August26-kernprasetio)**
-
----
-
-## 👨‍💻 Dibuat oleh
-
-**Ken** — RevoU Coding Camp
-
----
-
-*Dibuat dengan ☕ dan semangat belajar*
