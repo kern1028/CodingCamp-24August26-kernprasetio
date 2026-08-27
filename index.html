@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>☕ My Life Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Floating decorative blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="dashboard">
+
+    <!-- ═══════════════ GREETING CARD ═══════════════ -->
+    <div class="card card-greeting">
+      <div class="greeting-left">
+        <div class="greeting-icon">☕</div>
+        <div class="greeting-text">
+          <h1 class="greeting-message" id="greetingMsg">Good Morning</h1>
+          <p class="greeting-name" id="greetingName">Welcome back, <span id="userName">Friend</span>!</p>
+        </div>
+      </div>
+      <div class="greeting-right">
+        <div class="clock" id="clock">00:00:00</div>
+        <div class="date" id="dateDisplay">Loading date...</div>
+        <button class="btn-name-edit" id="btnEditName">✏️ Set Your Name</button>
+      </div>
+    </div>
+
+    <!-- Name Modal -->
+    <div class="modal-overlay" id="nameModal">
+      <div class="modal">
+        <h3>🌸 What's your name?</h3>
+        <input type="text" id="nameInput" class="modal-input" placeholder="Enter your name..." maxlength="30" />
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="btnSaveName">Save</button>
+          <button class="btn btn-ghost" id="btnCancelName">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+      <!-- ═══════════════ FOCUS TIMER ═══════════════ -->
+      <div class="card card-timer">
+        <div class="card-header">
+          <span class="card-icon">🍅</span>
+          <h2>Focus Timer</h2>
+        </div>
+
+        <div class="timer-display" id="timerDisplay">25:00</div>
+        <div class="timer-label" id="timerLabel">Ready to focus?</div>
+
+        <div class="timer-progress-wrap">
+          <div class="timer-progress-bar" id="timerProgressBar"></div>
+        </div>
+
+        <div class="timer-duration-wrap">
+          <label class="duration-label">Duration (min)</label>
+          <div class="duration-controls">
+            <button class="btn-round" id="btnDurDown">−</button>
+            <span class="duration-value" id="durationValue">25</span>
+            <button class="btn-round" id="btnDurUp">+</button>
+          </div>
+        </div>
+
+        <div class="timer-buttons">
+          <button class="btn btn-primary" id="btnStart">▶ Start</button>
+          <button class="btn btn-secondary" id="btnStop">⏸ Pause</button>
+          <button class="btn btn-ghost" id="btnReset">↺ Reset</button>
+        </div>
+
+        <div class="pomodoro-count">
+          <span>🍅 Sessions today: </span>
+          <span class="count-badge" id="pomodoroCount">0</span>
+        </div>
+      </div>
+
+      <!-- ═══════════════ TO-DO LIST ═══════════════ -->
+      <div class="card card-todo">
+
+        <!-- Header row -->
+        <div class="card-header todo-header">
+          <span class="card-icon">📋</span>
+          <h2>My Tasks</h2>
+          <div class="todo-header-controls">
+            <select id="sortSelect" class="sort-select">
+              <option value="default">Sort: Created</option>
+              <option value="dueDate">Sort: Due Date</option>
+              <option value="priority">Sort: Priority</option>
+              <option value="alpha">Sort: A–Z</option>
+              <option value="done">Sort: Done Last</option>
+            </select>
+            <button class="btn-add-toggle btn btn-primary" id="btnToggleForm" title="Add task">+ New Task</button>
+          </div>
+        </div>
+
+        <!-- Collapsible add form -->
+        <div class="todo-form-wrap" id="todoFormWrap">
+          <div class="todo-form">
+
+            <!-- Row 1: Task name -->
+            <div class="form-row">
+              <label class="form-label" for="todoInput">Task Name</label>
+              <input type="text" id="todoInput" class="todo-input form-control" placeholder="What needs to be done? 🌿" maxlength="100" />
+            </div>
+
+            <!-- Row 2: Due date + presets -->
+            <div class="form-row">
+              <label class="form-label" for="todoDueDate">Due Date & Time</label>
+              <div class="due-row">
+                <input type="datetime-local" id="todoDueDate" class="form-control due-input" />
+                <div class="preset-btns">
+                  <button class="btn-preset" data-preset="today">Today</button>
+                  <button class="btn-preset" data-preset="tomorrow">Tomorrow</button>
+                  <button class="btn-preset" data-preset="nextweek">Next Week</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 3: Priority + Pomodoro -->
+            <div class="form-row form-row-inline">
+              <div class="form-group">
+                <label class="form-label" for="todoPriority">Priority</label>
+                <select id="todoPriority" class="form-control form-select">
+                  <option value="high">🔴 High</option>
+                  <option value="medium" selected>🟡 Medium</option>
+                  <option value="low">🟢 Low</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="todoPomodoros">Est. Sessions 🍅</label>
+                <input type="number" id="todoPomodoros" class="form-control form-number"
+                       min="1" max="10" value="1" />
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+              <button class="btn btn-primary" id="btnAddTodo">Add Task</button>
+              <button class="btn btn-ghost" id="btnCancelForm">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter tabs + stats -->
+        <div class="todo-toolbar">
+          <div class="filter-tabs" id="filterTabs" role="tablist">
+            <button class="filter-tab active" data-filter="all"       role="tab">All</button>
+            <button class="filter-tab"        data-filter="today"     role="tab">Today</button>
+            <button class="filter-tab"        data-filter="upcoming"  role="tab">Upcoming</button>
+            <button class="filter-tab"        data-filter="completed" role="tab">Completed</button>
+          </div>
+          <span class="todo-stats" id="todoStats">0 tasks · 0 done</span>
+        </div>
+
+        <!-- Task list -->
+        <ul class="todo-list" id="todoList"></ul>
+        <div class="todo-empty" id="todoEmpty">
+          <span>🌸 No tasks here yet!</span>
+        </div>
+
+      </div>
+
+      <!-- ═══════════════ QUICK LINKS ═══════════════ -->
+      <div class="card card-links">
+        <div class="card-header">
+          <span class="card-icon">🔖</span>
+          <h2>Quick Links</h2>
+        </div>
+
+        <div class="links-add-wrap">
+          <input type="text" id="linkName" class="link-input" placeholder="Link name" maxlength="20" />
+          <input type="url" id="linkUrl" class="link-input" placeholder="https://..." />
+          <button class="btn btn-primary" id="btnAddLink">+ Add</button>
+        </div>
+
+        <div class="links-grid" id="linksGrid">
+          <!-- links rendered by JS -->
+        </div>
+
+        <div class="links-empty" id="linksEmpty">
+          <span>🔗 No links yet — add your favorites!</span>
+        </div>
+      </div>
+
+    </div><!-- end .dashboard-grid -->
+  </div><!-- end .dashboard -->
+
+  <!-- Edit Task Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal modal-wide">
+      <h3>✏️ Edit Task</h3>
+
+      <div class="form-row">
+        <label class="form-label" for="editInput">Task Name</label>
+        <input type="text" id="editInput" class="modal-input form-control" placeholder="Task name..." maxlength="100" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="editDueDate">Due Date & Time</label>
+        <div class="due-row">
+          <input type="datetime-local" id="editDueDate" class="form-control due-input" />
+          <div class="preset-btns">
+            <button class="btn-preset" data-edit-preset="today">Today</button>
+            <button class="btn-preset" data-edit-preset="tomorrow">Tomorrow</button>
+            <button class="btn-preset" data-edit-preset="nextweek">Next Week</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row form-row-inline">
+        <div class="form-group">
+          <label class="form-label" for="editPriority">Priority</label>
+          <select id="editPriority" class="form-control form-select">
+            <option value="high">🔴 High</option>
+            <option value="medium">🟡 Medium</option>
+            <option value="low">🟢 Low</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editPomodoros">Est. Sessions 🍅</label>
+          <input type="number" id="editPomodoros" class="form-control form-number" min="1" max="10" value="1" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btnSaveEdit">Save Changes</button>
+        <button class="btn btn-ghost" id="btnCancelEdit">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
