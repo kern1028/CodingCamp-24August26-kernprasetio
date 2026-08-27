@@ -102,7 +102,7 @@ loadUserName();
 const timerDisplayEl   = document.getElementById('timerDisplay');
 const timerLabelEl     = document.getElementById('timerLabel');
 const timerProgressBar = document.getElementById('timerProgressBar');
-const durationValueEl  = document.getElementById('durationValue');
+const durationValueEl  = document.getElementById('durationValue'); // now an <input>
 const btnStart         = document.getElementById('btnStart');
 const btnStop          = document.getElementById('btnStop');
 const btnReset         = document.getElementById('btnReset');
@@ -139,7 +139,7 @@ function updateTimerUI() {
 function setDuration(mins) {
   timerDuration = Math.max(1, Math.min(90, mins));
   store.set('timerDuration', timerDuration);
-  durationValueEl.textContent = timerDuration;
+  durationValueEl.value = timerDuration;        // input.value not .textContent
   if (!timerRunning) {
     timeLeft = timerDuration * 60;
     updateTimerUI();
@@ -211,6 +211,21 @@ btnReset.addEventListener('click', resetTimer);
 btnDurDown.addEventListener('click', () => { if (!timerRunning) setDuration(timerDuration - 1); });
 btnDurUp.addEventListener('click',   () => { if (!timerRunning) setDuration(timerDuration + 1); });
 
+// Keyboard input: user can type a number directly into the duration field
+durationValueEl.addEventListener('input', () => {
+  if (timerRunning) { durationValueEl.value = timerDuration; return; }
+  const val = parseInt(durationValueEl.value, 10);
+  if (!isNaN(val) && val >= 1 && val <= 90) setDuration(val);
+});
+durationValueEl.addEventListener('blur', () => {
+  // Snap to valid range on blur in case user left it blank / out of range
+  const val = parseInt(durationValueEl.value, 10);
+  setDuration(isNaN(val) ? timerDuration : val);
+});
+durationValueEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { durationValueEl.blur(); }
+});
+
 // Request notification permission on first interaction
 document.addEventListener('click', () => {
   if (Notification && Notification.permission === 'default') {
@@ -219,7 +234,7 @@ document.addEventListener('click', () => {
 }, { once: true });
 
 // Init timer display
-durationValueEl.textContent = timerDuration;
+durationValueEl.value       = timerDuration;
 pomodoroCountEl.textContent = pomodoroCount;
 updateTimerUI();
 
@@ -231,7 +246,6 @@ updateTimerUI();
 const todoInputEl    = document.getElementById('todoInput');
 const todoDueDateEl  = document.getElementById('todoDueDate');
 const todoPriorityEl = document.getElementById('todoPriority');
-const todoPomosEl    = document.getElementById('todoPomodoros');
 const btnAddTodo     = document.getElementById('btnAddTodo');
 const btnToggleForm  = document.getElementById('btnToggleForm');
 const btnCancelForm  = document.getElementById('btnCancelForm');
@@ -246,7 +260,6 @@ const editModal      = document.getElementById('editModal');
 const editInputEl    = document.getElementById('editInput');
 const editDueDateEl  = document.getElementById('editDueDate');
 const editPriorityEl = document.getElementById('editPriority');
-const editPomosEl    = document.getElementById('editPomodoros');
 const btnSaveEdit    = document.getElementById('btnSaveEdit');
 const btnCancelEdit  = document.getElementById('btnCancelEdit');
 
@@ -382,15 +395,12 @@ function renderTodos() {
     const isOverdue  = timeStatus?.overdue && !todo.done;
 
     const li = document.createElement('li');
-    li.className = ['todo-item', todo.done ? 'done' : '', isOverdue ? 'overdue' : ''].filter(Boolean).join(' ');
+    li.className = ['todo-item', todo.done ? 'done' : '', isOverdue ? 'overdue' : '', todo.id === highlightedId ? 'highlighted' : ''].filter(Boolean).join(' ');
     li.dataset.id = todo.id;
 
     // Priority badge
     const priorityLabels = { high:'🔴 High', medium:'🟡 Medium', low:'🟢 Low' };
     const priorityBadge  = `<span class="priority-badge ${todo.priority}">${priorityLabels[todo.priority] || 'Medium'}</span>`;
-
-    // Pomodoro chip
-    const pomoChip = `<span class="pomo-chip">🍅 ×${todo.pomodoros || 1}</span>`;
 
     // Time status badge
     const timeBadge = timeStatus
@@ -404,22 +414,20 @@ function renderTodos() {
           <div class="todo-text">${escapeHtml(todo.text)}</div>
           <div class="todo-meta-chips">
             ${priorityBadge}
-            ${pomoChip}
           </div>
         </div>
       </div>
-      ${(timeBadge || true) ? `
       <div class="todo-due-row">
         <div>${timeBadge}</div>
         <div class="todo-actions">
-          <button class="btn-icon btn-start-task" title="Start focus session for this task">▶ Focus</button>
+          <button class="btn-icon btn-start-task" title="Highlight task">📌 Focus</button>
           <button class="btn-icon btn-edit-task"  title="Edit task">✏️</button>
           <button class="btn-icon btn-delete-task" title="Delete task">🗑️</button>
         </div>
-      </div>` : ''}`;
+      </div>`;
 
     li.querySelector('.todo-checkbox').addEventListener('change', () => toggleTodo(todo.id));
-    li.querySelector('.btn-start-task').addEventListener('click', () => startFocusForTask(todo));
+    li.querySelector('.btn-start-task').addEventListener('click', () => highlightTask(todo.id));
     li.querySelector('.btn-edit-task').addEventListener('click',  () => openEditModal(todo.id));
     li.querySelector('.btn-delete-task').addEventListener('click',() => deleteTodo(todo.id));
 
@@ -443,7 +451,6 @@ function clearAddForm() {
   todoInputEl.value    = '';
   todoDueDateEl.value  = '';
   todoPriorityEl.value = 'medium';
-  todoPomosEl.value    = '1';
 }
 
 /* ── Preset buttons (add form) ── */
@@ -474,7 +481,6 @@ function addTodo() {
     done:      false,
     dueDate:   todoDueDateEl.value  || null,
     priority:  todoPriorityEl.value || 'medium',
-    pomodoros: parseInt(todoPomosEl.value, 10) || 1,
     createdAt: Date.now()
   });
   saveTodos();
@@ -502,13 +508,26 @@ function deleteTodo(id) {
   showToast('🗑️ Task deleted');
 }
 
-/* ── Start focus for task ── */
-function startFocusForTask(todo) {
-  // Set timer duration to task's pomodoro count and scroll to timer
-  setDuration(todo.pomodoros || 25);
-  timerLabelEl.textContent = `🍅 Focusing on: ${todo.text}`;
-  document.querySelector('.card-timer').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  showToast(`▶ Starting focus for "${todo.text}"`, 3000);
+/* ── Highlight task ── */
+let highlightedId = null;
+function highlightTask(id) {
+  // Toggle: clicking the same task again removes highlight
+  if (highlightedId === id) {
+    highlightedId = null;
+    showToast('📌 Highlight removed');
+  } else {
+    highlightedId = id;
+    const todo = todos.find(t => t.id === id);
+    showToast(`📌 Focused on: "${todo?.text}"`, 3000);
+  }
+  // Update highlight class without full re-render (avoid scroll jump)
+  document.querySelectorAll('.todo-item').forEach(el => {
+    el.classList.toggle('highlighted', el.dataset.id === highlightedId);
+  });
+  document.querySelectorAll('.btn-start-task').forEach(btn => {
+    const li = btn.closest('.todo-item');
+    btn.classList.toggle('active-highlight', li?.dataset.id === highlightedId);
+  });
 }
 
 /* ── Edit modal ── */
@@ -537,7 +556,6 @@ function saveEdit() {
     todo.text      = text;
     todo.dueDate   = editDueDateEl.value  || null;
     todo.priority  = editPriorityEl.value || 'medium';
-    todo.pomodoros = parseInt(editPomosEl.value, 10) || 1;
     saveTodos();
     renderTodos();
     showToast('✏️ Task updated!');

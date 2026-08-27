@@ -64,9 +64,18 @@
           <label class="duration-label">Duration (min)</label>
           <div class="duration-controls">
             <button class="btn-round" id="btnDurDown">−</button>
-            <span class="duration-value" id="durationValue">25</span>
+            <input
+              type="number"
+              id="durationValue"
+              class="duration-input"
+              value="25"
+              min="1"
+              max="90"
+              aria-label="Duration in minutes"
+            />
             <button class="btn-round" id="btnDurUp">+</button>
           </div>
+          <p class="duration-hint">ketik angka atau klik −/+</p>
         </div>
 
         <div class="timer-buttons">
@@ -123,21 +132,14 @@
               </div>
             </div>
 
-            <!-- Row 3: Priority + Pomodoro -->
-            <div class="form-row form-row-inline">
-              <div class="form-group">
-                <label class="form-label" for="todoPriority">Priority</label>
-                <select id="todoPriority" class="form-control form-select">
-                  <option value="high">🔴 High</option>
-                  <option value="medium" selected>🟡 Medium</option>
-                  <option value="low">🟢 Low</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="todoPomodoros">Est. Sessions 🍅</label>
-                <input type="number" id="todoPomodoros" class="form-control form-number"
-                       min="1" max="10" value="1" />
-              </div>
+            <!-- Row 3: Priority -->
+            <div class="form-row">
+              <label class="form-label" for="todoPriority">Priority</label>
+              <select id="todoPriority" class="form-control form-select">
+                <option value="high">🔴 High</option>
+                <option value="medium" selected>🟡 Medium</option>
+                <option value="low">🟢 Low</option>
+              </select>
             </div>
 
             <!-- Actions -->
@@ -222,10 +224,6 @@
             <option value="medium">🟡 Medium</option>
             <option value="low">🟢 Low</option>
           </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="editPomodoros">Est. Sessions 🍅</label>
-          <input type="number" id="editPomodoros" class="form-control form-number" min="1" max="10" value="1" />
         </div>
       </div>
 
