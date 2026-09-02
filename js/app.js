@@ -538,7 +538,6 @@ function openEditModal(id) {
   editInputEl.value     = todo.text;
   editDueDateEl.value   = todo.dueDate || '';
   editPriorityEl.value  = todo.priority || 'medium';
-  editPomosEl.value     = todo.pomodoros || 1;
   editModal.classList.add('active');
   editInputEl.focus();
   editInputEl.select();
